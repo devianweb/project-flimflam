@@ -1,8 +1,5 @@
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.glfw.GLFW;
 
 public class Game implements Runnable {
 
@@ -24,9 +21,6 @@ public class Game implements Runnable {
     private RawModel model;
 
     public Game() {
-        loader = new Loader();
-        renderer = new Renderer();
-//        model = loader.loadToVAO(vertices);
         startGameLoop();
     }
 
@@ -37,13 +31,13 @@ public class Game implements Runnable {
 
     private void update() {
         renderer.prepare();
-//        renderer.render(model);
+        renderer.render(model);
 
-        glfwSwapBuffers(window); // swap the color buffers
+        GLFW.glfwSwapBuffers(window); // swap the color buffers
 
         // Poll for window events. The key callback above will only be
         // invoked during this call.
-        glfwPollEvents();
+        GLFW.glfwPollEvents();
     }
 
     @Override
@@ -58,9 +52,14 @@ public class Game implements Runnable {
         // bindings available for use.
         GL.createCapabilities();
 
-        // Set the clear color
-        GL11.glClearColor(1.0f, 1.0f, 0.0f, 0.0f);
+        //initialise loader and renderer - has to be after we create the context capabilities
+        loader = new Loader();
+        renderer = new Renderer();
 
+        //load rectangle to memory
+        model = loader.loadToVAO(vertices);
+
+        //game loop stuff
         double timePerUpdate = 1000000000.0 / 120;
 
         int updates = 0;
@@ -71,7 +70,7 @@ public class Game implements Runnable {
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(window)) {
+        while (!GLFW.glfwWindowShouldClose(window)) {
             var currentTime = System.nanoTime();
 
             deltaU += (currentTime - previousTime) / timePerUpdate;
@@ -91,7 +90,9 @@ public class Game implements Runnable {
             }
         }
 
+        //clean up memory
         loader.cleanUp();
+        //kill window
         gameWindow.destoryGameWindow();
     }
 }
