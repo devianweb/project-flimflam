@@ -1,14 +1,14 @@
 import org.lwjgl.opengl.GL;
 import org.lwjgl.glfw.GLFW;
 
-public class Game implements Runnable {
+public class Game {
 
-    private Thread thread;
-    private GameWindow gameWindow;
+    private final GameWindow gameWindow;
+    private final Loader loader;
+    private final Renderer renderer;
+
     private long window;
 
-    private Loader loader;
-    private Renderer renderer;
 
     private float[] vertices = {
             -0.5f, 0.5f, 0f,
@@ -21,12 +21,10 @@ public class Game implements Runnable {
     private RawModel model;
 
     public Game() {
-        startGameLoop();
-    }
-
-    private void startGameLoop() {
-        thread = new Thread(this);
-        thread.start();
+        gameWindow = new GameWindow();
+        loader = new Loader();
+        renderer = new Renderer();
+        run();
     }
 
     private void update() {
@@ -40,9 +38,7 @@ public class Game implements Runnable {
         GLFW.glfwPollEvents();
     }
 
-    @Override
     public void run() {
-        gameWindow = new GameWindow();
         window = gameWindow.getWindow();
 
         // This line is critical for LWJGL's interoperation with GLFW's
@@ -53,8 +49,6 @@ public class Game implements Runnable {
         GL.createCapabilities();
 
         //initialise loader and renderer - has to be after we create the context capabilities
-        loader = new Loader();
-        renderer = new Renderer();
 
         //load rectangle to memory
         model = loader.loadToVAO(vertices);
