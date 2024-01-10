@@ -12,7 +12,7 @@ public class Renderer {
     public void render(RawModel model) {
         GL46.glBindVertexArray(model.getVaoID());
         GL46.glEnableVertexAttribArray(0);
-        GL46.glDrawArrays(GL46.GL_TRIANGLES, 0, model.getVertexCount());
+        GL46.glDrawElements(GL46.GL_TRIANGLES, model.getVertexCount(), GL46.GL_UNSIGNED_INT, 0);
         GL46.glDisableVertexAttribArray(0);
         GL46.glBindVertexArray(0);
     }

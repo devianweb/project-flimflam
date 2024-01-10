@@ -14,10 +14,14 @@ public class Game {
             -0.5f, 0.5f, 0f,
             -0.5f, -0.5f, 0f,
             0.5f, -0.5f, 0f,
-            0.5f, -0.5f, 0f,
             0.5f, 0.5f, 0f,
-            -0.5f, 0.5f, 0f
     };
+
+    private int[] indices = {
+            0, 1, 3,
+            3, 1, 2
+    };
+
     private RawModel model;
 
     public Game() {
@@ -51,7 +55,7 @@ public class Game {
         //initialise loader and renderer - has to be after we create the context capabilities
 
         //load rectangle to memory
-        model = loader.loadToVAO(vertices);
+        model = loader.loadToVAO(vertices, indices);
 
         //game loop stuff
         double timePerUpdate = 1000000000.0 / 120;
