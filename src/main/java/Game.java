@@ -1,14 +1,14 @@
 import org.lwjgl.opengl.GL;
 import org.lwjgl.glfw.GLFW;
+import shaders.StaticShader;
 
 public class Game {
 
     private final GameWindow gameWindow;
     private final Loader loader;
     private final Renderer renderer;
-
+    private StaticShader staticShader;
     private long window;
-
 
     private float[] vertices = {
             -0.5f, 0.5f, 0f,
@@ -33,8 +33,9 @@ public class Game {
 
     private void update() {
         renderer.prepare();
+        staticShader.start();
         renderer.render(model);
-
+        staticShader.stop();
         GLFW.glfwSwapBuffers(window); // swap the color buffers
 
         // Poll for window events. The key callback above will only be
@@ -51,6 +52,9 @@ public class Game {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        staticShader = new StaticShader();
+
 
         //initialise loader and renderer - has to be after we create the context capabilities
 
@@ -89,6 +93,7 @@ public class Game {
         }
 
         //clean up memory
+        staticShader.cleanUp();
         loader.cleanUp();
         //kill window
         gameWindow.destoryGameWindow();
