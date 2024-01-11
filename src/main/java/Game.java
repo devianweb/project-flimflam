@@ -1,4 +1,3 @@
-import org.lwjgl.opengl.GL;
 import org.lwjgl.glfw.GLFW;
 import shaders.StaticShader;
 
@@ -24,11 +23,12 @@ public class Game {
 
     private RawModel model;
 
-    public Game() {
-        gameWindow = new GameWindow();
+    public Game(GameWindow gameWindow) {
+        this.gameWindow = gameWindow;
+        this.window = gameWindow.getWindow();
         loader = new Loader();
         renderer = new Renderer();
-        run();
+        staticShader = new StaticShader();
     }
 
     private void update() {
@@ -44,20 +44,6 @@ public class Game {
     }
 
     public void run() {
-        window = gameWindow.getWindow();
-
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
-        GL.createCapabilities();
-
-        staticShader = new StaticShader();
-
-
-        //initialise loader and renderer - has to be after we create the context capabilities
-
         //load rectangle to memory
         model = loader.loadToVAO(vertices, indices);
 
